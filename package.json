@@ -1,0 +1,29 @@
+{
+  "name": "Sprint-Challenge-Node-Express",
+  "version": "1.0.0",
+  "description": "Please open the `Review.md` file and answer the questions.",
+  "main": "knexfile.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheObserverofOne/Sprint-Challenge-Node-Express.git"
+  },
+  "keywords": [],
+  "author": "Kev G",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TheObserverofOne/Sprint-Challenge-Node-Express/issues"
+  },
+  "homepage": "https://github.com/TheObserverofOne/Sprint-Challenge-Node-Express#readme",
+  "dependencies": {
+    "cors": "^2.8.4",
+    "helmet": "^3.12.0",
+    "knex": "^0.14.4",
+    "sqlite3": "^4.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.3"
+  }
+}
