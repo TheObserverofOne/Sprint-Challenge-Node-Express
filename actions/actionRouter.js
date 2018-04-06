@@ -36,11 +36,11 @@ router.get(`/:id`, (req, res) => {
 router.post(`/`, (req, res) => {
   const newAction = req.body !== undefined ? req.body : {};
 
-  if (newAction.project.id === undefined) {
+  if (newAction.project_id === undefined) {
     return res.status(400).json({ errorMessage: `A project id is needed.` });
   }
 
-  if (!Number(newAction.project.id)) {
+  if (!Number(newAction.project_id)) {
     return res.status(400).json({ errorMessage: `Please enter a number only` });
   }
 
@@ -52,12 +52,12 @@ router.post(`/`, (req, res) => {
     return res.status(400).json({ errorMessage: `Please keep description under 128 characters.`});
   }
 
-  const posted = newAction.posted !== undefined ? newAction.posted : false;
-  const actionPosts = newAction.actionPosts !== undefined ? newAction.actionPosts : '';
+  const completed = newAction.completed !== undefined ? newAction.completed : false;
+  const notes = newAction.notes !== undefined ? newAction.notes : '';
 
   const actions = Object.assign(newAction, {
-    posted: posted,
-    actionPosts: actionPosts,
+    completed: completed,
+    notes: notes,
   });
 
   actionModel

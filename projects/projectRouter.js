@@ -35,6 +35,22 @@ router.get(`/:id`, (req, res) => {
     });
 });
 
+router.get(`/:id/actions`, (req, res) => {
+  const { id } = req.params;
+
+  projectModel
+    .getProjectActions(id)
+    .then(actions => {
+      if (actions.length > 0) {
+        res.status(200).json(actions);
+      } else {
+        res.status(404).json({ message: `No actions found!` });
+      }
+    })
+    .catch(error => res.status(500).json(error));
+});
+
+
 router.post(`/`, (req, res) => {
   const newProject = req.body !== undefined ? req.body : {};
 
@@ -46,8 +62,8 @@ router.post(`/`, (req, res) => {
     return res.status(400).json({ errorMessage: `Please keep project name and description under 128 characters`});
   }
 
-  const posted = newProject.posted !== undefined ? newProject.posted : false;
-  const project = Object.assign(newProject, { posted: posted });
+  const completed = newProject.completed !== undefined ? newProject.completed : false;
+  const project = Object.assign(newProject, { completed: completed });
 
   projectModel
     .insert(project)
