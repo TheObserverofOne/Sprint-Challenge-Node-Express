@@ -6,41 +6,26 @@ const config = require('../api/config.js');
 
 const router = express.Router();
 
-router.get(`/`, (req, res) => {
-  actionModel
-    .get()
-    .then(actions => {
-      if (actions.length > 0) {
-        res.status(200).json(actions);
-      } else {
-        res.status(404).json({ errorMessage: `Actions do not exist.` });
-      }
-    })
-    .catch(error => res.status(500).json(error));
-});
 
-router.get(`/:id`, (req, res) => {
-  const { id } = req.params;
+router.get(`/:id?`, (req, res) => {
+  const { id } = req.params
   actionModel
-    .get(id)
-    .then(action => {
-      if (Object.keys(action).length > 0) {
-        res.status(200).json(action);
-      } else {
-        res.status(404).json({ errorMessage: `The specified action does not exist.` });
-      }
+    .get(id || '')
+    .then(actions => {
+      if (Array.isArray(actions) && actions.length < 1) return res.status(404).json({ errorMessage: `Actions do not exist.` });
+      res.status(200).json(actions);
     })
     .catch(error => res.status(500).json(error));
 });
 
 router.post(`/`, (req, res) => {
-  const newAction = req.body !== undefined ? req.body : {};
+  const newAction = req.body;
 
   if (newAction.project_id === undefined) {
     return res.status(400).json({ errorMessage: `A project id is needed.` });
   }
 
-  if (!Number(newAction.project_id)) {
+  if (isNaN(newAction.project_id)) {
     return res.status(400).json({ errorMessage: `Please enter a number only` });
   }
 
@@ -55,23 +40,11 @@ router.post(`/`, (req, res) => {
   const completed = newAction.completed !== undefined ? newAction.completed : false;
   const notes = newAction.notes !== undefined ? newAction.notes : '';
 
-  const actions = Object.assign(newAction, {
-    completed: completed,
-    notes: notes,
-  });
+  const actions = { ...newAction, completed, notes };
 
   actionModel
     .insert(actions)
-    .then(response => {
-      actionModel.get(response.id)
-      .then(action => {
-        if (Object.keys(action).length > 0) {
-          res.status(200).json(action);
-        } else {
-          res.status(404).json({ errorMessage: `The action could not be created.` });
-        }
-      });
-    })
+      res.redirect(`/api/actions/${id}`);
     .catch(error => res.status(500).json(error));
 });
 
@@ -85,7 +58,7 @@ router.put(`/:id`, (req, res) => {
       if (Object.keys(updates).length > 0) {
         res.status(200).json(updates);
       } else {
-        res.status(404).json({ errorMessage: `The action could not update.` }); /
+        res.status(404).json({ errorMessage: `The action could not update.` });
       }
     })
     .catch(error => res.status(500).json(error));
@@ -103,7 +76,7 @@ router.delete(`/:id`, (req, res) => {
           res.status(200).json(action); 
         });
       } else {
-        res.status(404).json({ errorMessage: `The action was not deleted.` }); /
+        res.status(404).json({ errorMessage: `The action was not deleted.` });
       }
     })
     .catch(error => res.status(500).json(error));

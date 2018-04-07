@@ -16,8 +16,8 @@ router.get(`/`, (req, res) => {
       } else {
         res.status(404).json({ errorMessage: `No projects.` });
       }
+    })
     .catch(error => res.status(500).json(error));
-    });
 });
 
 router.get(`/:id`, (req, res) => {
@@ -31,8 +31,8 @@ router.get(`/:id`, (req, res) => {
       } else {
         res.status(404).json({ errorMessage: `Project not found` }); 
       }
-    .catch(error => res.status(500).json(error));
     });
+    .catch(error => res.status(500).json(error));
 });
 
 router.get(`/:id/actions`, (req, res) => {
